@@ -1,6 +1,10 @@
 import React, { Component } from "react";
-
+import PropTypes from "prop-types";
 class Modal extends Component {
+  static propTypes = {
+    onClose: PropTypes.func.isRequired,
+    children: PropTypes.node.isRequired,
+  };
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown);
   }
@@ -13,9 +17,14 @@ class Modal extends Component {
       this.props.onClose();
     }
   };
+  handleClose = (e) => {
+    if (e.currentTarget === e.target) {
+      this.props.onClose();
+    }
+  };
   render() {
     return (
-      <div className="Overlay">
+      <div className="Overlay" onClick={this.handleClose}>
         <div className="Modal">{this.props.children}</div>
       </div>
     );

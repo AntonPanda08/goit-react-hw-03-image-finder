@@ -7,6 +7,7 @@ import Error from "./components/error";
 import LoadMoreButton from "./components/loadMoreButton";
 import Modal from "./components/modal";
 import "./styles.css";
+import ImageGalleryItem from "./components/imageGalleryItem";
 
 class App extends Component {
   state = {
@@ -16,6 +17,7 @@ class App extends Component {
     searchQuery: "",
     page: 1,
     showModal: false,
+    modalContent: "",
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -59,30 +61,32 @@ class App extends Component {
   toggleModal = () => {
     this.setState((prevState) => ({ showModal: !prevState.showModal }));
   };
+  handlerModalContent = (id) => {
+    const content = this.state.images.find((image) => id === image.id);
+    this.setState({ modalContent: content.largeImageURL });
+  };
   render() {
-    const { error, loading, images, showModal } = this.state;
+    const { error, loading, images, showModal, modalContent } = this.state;
     return (
       <>
         <SearchBar onSubmit={this.handleSearchSubmit} />
         {error && <Error message={`OOPS: ${error.message}`} />}
         {loading && <Spinner />}
-        {images.length > 0 && <ImageGallery images={images} />}
-        {images.length > 0 && !loading && (
-          <LoadMoreButton handleClick={this.fetchImages} />
+        {images.length > 0 && (
+          <ImageGallery onImageClick={this.toggleModal}>
+            <ImageGalleryItem
+              images={images}
+              onCardClick={this.handlerModalContent}
+            ></ImageGalleryItem>
+          </ImageGallery>
         )}
-        <button type="button" onClick={this.toggleModal}>
-          модалка
-        </button>
         {showModal && (
           <Modal onClose={this.toggleModal}>
-            <img
-              src="https://pixabay.com/get/55e2d1424d57b108f5d0846096293079103dd8e0564c704f752d7bd39e4bc751_1280.jpg"
-              alt=""
-            />
-            <button type="button" onClick={this.toggleModal}>
-              Close
-            </button>
+            <img src={modalContent} alt="modal" />
           </Modal>
+        )}
+        {images.length > 0 && !loading && (
+          <LoadMoreButton handleClick={this.fetchImages} />
         )}
       </>
     );
