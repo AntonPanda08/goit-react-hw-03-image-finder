@@ -10,17 +10,16 @@ class ImageGalleryItem extends Component {
     onCardClick: PropTypes.func.isRequired,
   };
   render() {
-    const { images } = this.props;
-    return images.map(({ id, webformatURL, tags }) => (
-      <li className="ImageGalleryItem" key={id}>
+    return (
+      <li className="ImageGalleryItem">
         <img
-          onClick={() => this.props.onCardClick(id)}
-          src={webformatURL}
-          alt={tags}
+          onClick={() => this.props.onCardClick(this.props.largeImageUrl)}
+          src={this.props.webformatURL}
+          alt={this.props.tags}
           className="ImageGalleryItem-image"
         />
       </li>
-    ));
+    );
   }
 }
 

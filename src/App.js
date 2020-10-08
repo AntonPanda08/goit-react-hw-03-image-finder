@@ -61,8 +61,10 @@ class App extends Component {
   toggleModal = () => {
     this.setState((prevState) => ({ showModal: !prevState.showModal }));
   };
-  handlerModalContent = (id) => {
-    const content = this.state.images.find((image) => id === image.id);
+  handlerModalContent = (largeImageUrl) => {
+    const content = this.state.images.find(
+      (image) => largeImageUrl === image.largeImageUrl
+    );
     this.setState({ modalContent: content.largeImageURL });
   };
   render() {
@@ -74,10 +76,16 @@ class App extends Component {
         {loading && <Spinner />}
         {images.length > 0 && (
           <ImageGallery onImageClick={this.toggleModal}>
-            <ImageGalleryItem
-              images={images}
-              onCardClick={this.handlerModalContent}
-            ></ImageGalleryItem>
+            {images.map((image) => (
+              <ImageGalleryItem
+                key={image.id}
+                onCardClick={this.handlerModalContent}
+                id={image.id}
+                webformatURL={image.webformatURL}
+                tags={image.tags}
+                largeImageUrl={image.largeImageUrl}
+              ></ImageGalleryItem>
+            ))}
           </ImageGallery>
         )}
         {showModal && (
